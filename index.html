@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Random Forest Classifier for Classification in Nutshell</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+        .image-100 img {
+          width: 100%;
+        }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+        class: center, middle
+
+        # Decision Tree
+        .image-100[![](assets/Decision-Tree.png)]
+        ???
+        ---
+        .image-100[![](assets/Guessing-Game.png)]
+        ---
+        # Terminologies
+        #### Splitting:
+        The process of splitting a node into two or more sub-nodes using a split criterion and a selected feature.
+        #### Impurity:
+        A measurement of the target variable’s homogeneity in a subset of data
+        #### Variance:
+        Variance measures how much the predicted and the target variables vary in different samples of a dataset.
+        #### Information Gain:
+        Information gain is a measure of the reduction in impurity achieved by splitting a dataset on a particular feature
+        ---
+        # How to choose the best attribute at each node
+        ### Split each node data to sub sets by:
+        - Information Gain (Max or Min(Entropy))
+        - Gini impurity (Min)
+
+        ### Best split:
+        in each sub node most of the samples spitted by class
+        ---
+        # Decision Tree Algorithm
+        1. pick node ( containing data)
+        1. find the best attribute for splitting in the data
+        1. split the node's data into subsets
+        1. recursively make new decision trees using the subsets
+        ---
+        # Advantages
+        - simple to understand
+        - useful for solving decision-related problems
+        - less requirement of data cleaning compared to other algorithms
+        ---
+        # Disadvantages
+        - may have an over-fitting issue
+        - computational complexity of the decision tree may increase for dataset with lot of classes
+        ---
+        # What are appropriate problems for Decision tree?
+        - dataset is represented by attribute-value pairs
+        - target function has discrete output values
+        - disjunctive descriptions may be required
+        - training data may contain errors
+        - training data may contain missing attribute values
+        ---
+        # Practical issues
+        - Determining how deeply to grow the decision tree
+        - Handling continuous attributes
+        - Handling missing attribute values
+        ---
+        # Random Forest Classifier
+        .image-100[![](assets/RandomForestClassifier.png)]
+        ---
+        # Random Forest Classifier
+        - is an ensemble learning technique designed to enhance the accuracy and robustness of classification tasks
+        - employs a technique called bagging (Bootstrap Aggregating) to create these diverse subsets
+        - creates a set of decision trees from a randomly selected subset of the training set
+        - it collects the votes from different decision trees to decide the final prediction.
+        ---
+        # Random Forest Classifier Parameters
+        - n_estimators: Number of trees in the forest.
+
+        More trees generally lead to better performance, but at the cost of computational time.
+        - max_depth: Maximum depth of each tree.
+
+        Deeper trees can capture more complex patterns, but also risk over-fitting.
+        ---
+        # Advantages
+        - less prone to over-fitting compared to individual decision trees
+        - can handle irrelevant variables well, on datasets with a large number of features
+        - can provide insights into feature importance
+        ---
+        # Disadvantages
+        - can be computationally expensive
+        - may be biased toward the majority class in imbalanced datasets
+
+
+
+
+
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
