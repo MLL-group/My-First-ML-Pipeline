@@ -10,8 +10,15 @@ python = "^3.12"
 pandas = "^2.2.1"
 matplotlib = "^3.8.3"
 scikit-learn = "^1.4.1.post1"
+nyoka = "^5.5.0"
+pypmml = "^0.9.17"
+sklearn-pmml-model = "^1.0.6"
+skompiler = "^0.7"
+titus = "^0.8.4"
+gitpython = "^3.1.42"
 
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+

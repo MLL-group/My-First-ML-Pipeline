@@ -55,17 +55,17 @@ if __name__ == "__main__":
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3,
                                                         random_state=40, shuffle=True)
     # creating an RF classifier
-    clf = RandomForestClassifier(n_estimators=30)
+    clf = RandomForestClassifier(n_estimators=100)
+
+    # Training the model on the training dataset
+    # it function is used to train the model using the training sets as parameters
+    clf.fit(X_train, y_train)
 
     with open('RandomForestClassifier.pickle', 'wb') as handle:
         pickle.dump(clf, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
     with open('RandomForestClassifier.pickle', 'rb') as handle:
         clf = pickle.load(handle)
-
-    # Training the model on the training dataset
-    # it function is used to train the model using the training sets as parameters
-    clf.fit(X_train, y_train)
 
     # performing predictions on the test dataset
     y_pred = clf.predict(X_test)
