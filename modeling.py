@@ -1,18 +1,9 @@
-import dataclasses
-import os
 from dataclasses import dataclass
-from datetime import datetime
-import git
-import json
-from nyoka import skl_to_pmml
-from sklearn import metrics
 
 import pandas as pd
-from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-
-from sklearn.pipeline import Pipeline
-from pypmml import Model
+from sklearn.metrics import accuracy_score, classification_report
+from sklearn.model_selection import train_test_split, GridSearchCV
 
 
 @dataclass
@@ -32,22 +23,6 @@ class Experiment:
     hyperparameters: Hyperparameters
     dataset: Dataset
     name: str
-
-
-def train_model(X_train, y_train, config):
-    clf = RandomForestClassifier(n_estimators=config.n_estimators, max_depth=config.max_depth)
-    clf.fit(X_train, y_train)
-    return clf
-
-
-def save_model(model, features, target, config):
-    path = f"{config.name}.pmml"
-    pipeline = Pipeline([
-        ("model", model)
-    ])
-    skl_to_pmml(pipeline, features, target, path)
-
-    return os.stat(path)
 
 
 def prepare_dataset(config):
@@ -84,30 +59,10 @@ def prepare_dataset(config):
     return X, y
 
 
-def predict(model, X_test):
-    y_pred = model.predict(X_test)
-    y_pred = y_pred.iloc[:, :1]
-    y_pred = y_pred['predicted_Churn'].map({'False': False, 'True': True})
-
-    return y_pred
-
-
-def load_model(config):
-    path = f"{config.name}.pmml"
-    model = Model.fromFile(path)
-    return model
-
-
 def split_dataset(config):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=config.test_size,
                                                         random_state=40, shuffle=True)
     return X_train, X_test, y_train, y_test
-
-
-def save_metadata(experiment_context, experiment):
-    with open(f"{experiment.name}.metadata.json", 'w') as f:
-        json.dump(experiment_context, f)
-        # print(experiment_context, file=f)
 
 
 if __name__ == "__main__":
@@ -117,41 +72,33 @@ if __name__ == "__main__":
         hyperparameters=Hyperparameters(n_estimators=100, max_depth=None)
     )
 
-    experiment_context = {
-        'experiment': dataclasses.asdict(experiment),
-        'user': os.environ.get("USER"),
-        'create_time': datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),
-        'git_commit': git.Repo(search_parent_directories=True).head.object.hexsha,
-        'git_branch': git.Repo(search_parent_directories=True).active_branch.name,
-    }
-
-    current_time = datetime.now()
     X, y = prepare_dataset(experiment.dataset)
-    experiment_context['data_preparation_time'] = datetime.now().timestamp() - current_time.timestamp()
-
-    experiment_context['X'] = json.loads(X.describe().to_json())
-    experiment_context['y'] = json.loads(y.describe().to_json())
 
     X_train, X_test, y_train, y_test = split_dataset(experiment.dataset)
 
-    current_time = datetime.now()
-    trained_model = train_model(X_train, y_train, experiment.hyperparameters)
-    experiment_context['trained_model_time'] = datetime.now().timestamp() - current_time.timestamp()
+    print("---------------------------------------------------------")
 
-    current_time = datetime.now()
-    file_stats = save_model(model=trained_model, features=X_train.columns, target="Churn", config=experiment)
-    experiment_context['save_model_time'] = datetime.now().timestamp() - current_time.timestamp()
+    model = RandomForestClassifier(n_estimators=50, max_depth=None)
 
-    experiment_context['model_file_size_in_MB'] = file_stats.st_size / (1024 * 1024)
+    model.fit(X_train, y_train)
 
-    current_time = datetime.now()
-    loaded_model = load_model(config=experiment)
-    experiment_context['loaded_model_time'] = datetime.now().timestamp() - current_time.timestamp()
+    predictions = model.predict(X_test)
 
-    current_time = datetime.now()
-    y_pred = predict(loaded_model, X_test)
-    experiment_context['inference_time'] = datetime.now().timestamp() - current_time.timestamp()
+    print(classification_report(y_test, predictions))
 
-    experiment_context['accuracy_score'] = metrics.accuracy_score(y_test, y_pred)
+    print("---------------------------------------------------------")
+    print("Grid search:")
 
-    save_metadata(experiment_context, experiment)
+    model = RandomForestClassifier()
+    param_grid = {'n_estimators': [50, 100, 200], 'max_depth': [None, 10, 20, 30]}
+
+    grid_search = GridSearchCV(model, param_grid, cv=5)
+    grid_search.fit(X_train, y_train)
+
+    best_model = grid_search.best_estimator_
+    best_params = grid_search.best_params_
+
+    predictions = best_model.predict(X_test)
+
+    print(f"best_params {best_params}")
+    print(classification_report(y_test, predictions))

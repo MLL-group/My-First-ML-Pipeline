@@ -1,12 +1,12 @@
 import pickle
 
-import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 from sklearn import metrics
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
 
 if __name__ == "__main__":
     df = pd.read_csv('dataset/WA_Fn-UseC_-Telco-Customer-Churn.csv')

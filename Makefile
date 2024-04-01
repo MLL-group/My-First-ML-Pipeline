@@ -14,3 +14,6 @@ exercise-3:
 
 exercise-4:
 	poetry run python modeling.py
+
+exercise-5:
+	poetry run python export_model.py

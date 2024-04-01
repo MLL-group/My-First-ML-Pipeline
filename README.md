@@ -42,7 +42,7 @@ source: [prep_dataset.py](./prep_dataset.py)
 
 ---
 
-## Exercise 4: Modeling [WIP]
+## Exercise 4: Modeling
 1. Compare several estimators as in the example below:
      https://gist.github.com/amandaiglesiasmoreno/e20a4f052cf48e4a163db3eeb7d1fcd6/raw/e93903223d93af623b8711f5c3409b343458e9b7/create_models.py
      https://gist.github.com/amandaiglesiasmoreno/e0928eae6e1bc3bccad408b9ad00ccd6/raw/73120590f57c631b02ffdfbc5ebbda88437a085d/test_models.py
